@@ -47,3 +47,7 @@ pip install unsloth
 pip install --force-reinstall torch torchvision --index-url https://download.pytorch.org/whl/cu128
 pip install "datasets==5.0.0" gradio
 ```
+
+## License
+
+The code in this repo is free to use. The **base model and the fine-tuned adapter are not**: [ISSAI's KazLLM-8B](https://huggingface.co/issai/LLama-3.1-KazLLM-1.0-8B) is licensed under Meta's Llama 3.1 License plus **CC BY-NC 4.0 (non-commercial only)**, and that restriction carries over to this fine-tune. This project is a personal, non-commercial portfolio project — attribution to ISSAI for KazLLM-8B. Commercial use of the model or adapter would need a separate license from ISSAI.
