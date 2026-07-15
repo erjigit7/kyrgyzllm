@@ -4,3 +4,5 @@ __pycache__/
 unsloth_compiled_cache/
 outputs/
 hfkazllm/
+
+legal_translate_*.jsonl

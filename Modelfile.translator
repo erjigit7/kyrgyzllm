@@ -1,0 +1,10 @@
+# Ollama-модель переводчика ru<->ky для Myizam.
+# Создание: ollama create myizam-translator -f Modelfile.translator
+# ВАЖНО: шаблон — сырой passthrough: клиент (Myizam KyrgyzLlmTranslator) шлёт
+# /api/generate с raw=true и промптом ровно в обучающем формате.
+FROM ./outputs/kazllm-legal-translate-v1-gguf
+
+TEMPLATE "{{ .Prompt }}"
+PARAMETER temperature 0
+PARAMETER num_ctx 2048
+PARAMETER stop "Тапшырма:"
