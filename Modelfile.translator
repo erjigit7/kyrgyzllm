@@ -2,7 +2,7 @@
 # Создание: ollama create myizam-translator -f Modelfile.translator
 # ВАЖНО: шаблон — сырой passthrough: клиент (Myizam KyrgyzLlmTranslator) шлёт
 # /api/generate с raw=true и промптом ровно в обучающем формате.
-FROM ./outputs/kazllm-legal-translate-v1-gguf
+FROM ./outputs/kazllm-legal-translate-v1-gguf_gguf/kazllm.Q4_K_M.gguf
 
 TEMPLATE "{{ .Prompt }}"
 PARAMETER temperature 0

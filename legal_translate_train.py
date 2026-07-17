@@ -42,6 +42,8 @@ def build_examples(path: pathlib.Path, eos: str) -> list[str]:
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--max-steps", type=int, default=-1, help="15 = smoke-прогон")
+    ap.add_argument("--resume", default=None, help="путь к checkpoint-N для продолжения после обрыва")
+    ap.add_argument("--save-steps", type=int, default=600)
     args = ap.parse_args()
 
     model, tokenizer = FastLanguageModel.from_pretrained(
@@ -79,14 +81,14 @@ def main() -> None:
             eval_strategy="steps" if args.max_steps < 0 else "no",
             eval_steps=300,
             save_strategy="steps" if args.max_steps < 0 else "no",
-            save_steps=600,
+            save_steps=args.save_steps,
             save_total_limit=2,
             optim="adamw_8bit",
             dataloader_num_workers=0,
         ),
     )
 
-    trainer.train()
+    trainer.train(resume_from_checkpoint=args.resume)
     if args.max_steps < 0:
         model.save_pretrained(OUTPUT_DIR + "-final")
         tokenizer.save_pretrained(OUTPUT_DIR + "-final")
