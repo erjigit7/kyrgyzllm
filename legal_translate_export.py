@@ -7,8 +7,8 @@ Usage:  python legal_translate_export.py
 
 from unsloth import FastLanguageModel
 
-ADAPTER = "outputs/kazllm-legal-translate-v1-final"
-OUT = "outputs/kazllm-legal-translate-v1-gguf"
+ADAPTER = "outputs/kazllm-legal-translate-v2-final"
+OUT = "outputs/kazllm-legal-translate-v2-gguf"
 
 model, tokenizer = FastLanguageModel.from_pretrained(
     model_name=ADAPTER,
