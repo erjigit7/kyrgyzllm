@@ -41,11 +41,53 @@ FRACTIONS = [
 ]
 
 
+# Числительные словами (именительный) — «семьдесят» ↔ «жетимиш» и т.п.
+# Найдено на ручной проверке v2: десятки словами переводились бессмыслицей.
+NUMERALS = [
+    ("двадцать", "жыйырма"),
+    ("тридцать", "отуз"),
+    ("сорок", "кырк"),
+    ("пятьдесят", "элүү"),
+    ("шестьдесят", "алтымыш"),
+    ("семьдесят", "жетимиш"),
+    ("восемьдесят", "сексен"),
+    ("девяносто", "токсон"),
+    ("сто", "жүз"),
+]
+NUMERAL_DIGITS = ["20", "30", "40", "50", "60", "70", "80", "90", "100"]
+NUMERAL_BASE_PAIRS = 400   # сколько цифровых пар брать под числительные
+
+
 def find_fraction(text: str, forms: list[str]) -> str | None:
     for f in forms:
         if f in text:
             return f
     return None
+
+
+def numeral_variants(train: list[dict]) -> list[dict]:
+    """Реальные пары, где двузначное круглое число стоит ЦИФРОЙ на обеих сторонах,
+    → варианты с числом СЛОВОМ на обеих сторонах (жетимиш ↔ семьдесят)."""
+    import re
+    out = []
+    candidates = []
+    for r in train:
+        for d in NUMERAL_DIGITS:
+            # отдельный токен-число с обеих сторон, по одному вхождению — безопасная замена
+            pat = rf"(?<!\d){d}(?!\d)"
+            if len(re.findall(pat, r["ru"])) == 1 and len(re.findall(pat, r["ky"])) == 1:
+                candidates.append((r, d, pat))
+                break
+    random.shuffle(candidates)
+    for r, d, pat in candidates[:NUMERAL_BASE_PAIRS]:
+        import re as _re
+        for ru_w, kg_w in random.sample(NUMERALS, 3):   # 3 разных числительных на пару
+            out.append({
+                "law": r["law"], "article": r["article"],
+                "ru": _re.sub(pat, ru_w, r["ru"]),
+                "ky": _re.sub(pat, kg_w, r["ky"]),
+            })
+    return out
 
 
 def main() -> None:
@@ -80,7 +122,10 @@ def main() -> None:
             })
     print(f"после подстановок: {len(augmented)} уникальных пар")
 
-    rows = augmented * OVERSAMPLE + random.sample(train, min(ORIGINAL_MIX, len(train)))
+    numerals = numeral_variants(train)
+    print(f"вариантов с числительными словами: {len(numerals)}")
+
+    rows = augmented * OVERSAMPLE + numerals * 3 + random.sample(train, min(ORIGINAL_MIX, len(train)))
     random.shuffle(rows)
 
     out = HERE / "legal_translate_aug.jsonl"

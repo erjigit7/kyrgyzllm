@@ -5,10 +5,12 @@ Usage:  python legal_translate_export.py
 Затем:  ollama create myizam-translator -f Modelfile.translator
 """
 
+import sys
+
 from unsloth import FastLanguageModel
 
-ADAPTER = "outputs/kazllm-legal-translate-v2-final"
-OUT = "outputs/kazllm-legal-translate-v2-gguf"
+ADAPTER = sys.argv[1] if len(sys.argv) > 1 else "outputs/kazllm-legal-translate-v2-final"
+OUT = sys.argv[2] if len(sys.argv) > 2 else "outputs/kazllm-legal-translate-v2-gguf"
 
 model, tokenizer = FastLanguageModel.from_pretrained(
     model_name=ADAPTER,
