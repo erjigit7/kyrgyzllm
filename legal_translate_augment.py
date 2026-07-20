@@ -55,7 +55,7 @@ NUMERALS = [
     ("сто", "жүз"),
 ]
 NUMERAL_DIGITS = ["20", "30", "40", "50", "60", "70", "80", "90", "100"]
-NUMERAL_BASE_PAIRS = 400   # сколько цифровых пар брать под числительные
+NUMERAL_BASE_PAIRS = 800   # сколько цифровых пар брать под числительные
 
 
 def find_fraction(text: str, forms: list[str]) -> str | None:
@@ -81,7 +81,7 @@ def numeral_variants(train: list[dict]) -> list[dict]:
     random.shuffle(candidates)
     for r, d, pat in candidates[:NUMERAL_BASE_PAIRS]:
         import re as _re
-        for ru_w, kg_w in random.sample(NUMERALS, 3):   # 3 разных числительных на пару
+        for ru_w, kg_w in random.sample(NUMERALS, 4):   # 4 разных числительных на пару
             out.append({
                 "law": r["law"], "article": r["article"],
                 "ru": _re.sub(pat, ru_w, r["ru"]),
